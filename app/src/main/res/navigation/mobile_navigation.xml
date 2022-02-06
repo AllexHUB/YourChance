@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_list_of_startups">
+
+    <fragment
+        android:id="@+id/nav_list_of_startups"
+        android:name="com.grigorenko.yourchance.ui.list_of_startups.ListOfStartupsFragment"
+        android:label="@string/menu_startups"
+        tools:layout="@layout/fragment_list_of_startups" />
+
+    <fragment
+        android:id="@+id/nav_messages"
+        android:name="com.grigorenko.yourchance.ui.messages.MessagesFragment"
+        android:label="@string/menu_messages"
+        tools:layout="@layout/fragment_messages" />
+
+    <fragment
+        android:id="@+id/nav_my_startup"
+        android:name="com.grigorenko.yourchance.ui.my_startup.MyStartupFragment"
+        android:label="@string/menu_my_startup"
+        tools:layout="@layout/fragment_my_startup" />
+    <activity
+        android:id="@+id/nav_user_profile"
+        android:name="com.grigorenko.yourchance.ui.user_profile.UserProfileActivity"
+        android:label="activity_user_profile"
+        tools:layout="@layout/activity_user_profile" />
+
+</navigation>
