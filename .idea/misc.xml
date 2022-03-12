@@ -3,6 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/YourChance/app/src/main/res/layout/activity_main.xml" value="0.17831813576494426" />
+        <entry key="..\:/AndroidStudioProjects/YourChance/app/src/main/res/layout/app_bar_main.xml" value="0.17831813576494426" />
+        <entry key="..\:/AndroidStudioProjects/YourChance/app/src/main/res/layout/content_main.xml" value="0.17831813576494426" />
+        <entry key="..\:/AndroidStudioProjects/YourChance/app/src/main/res/layout/fragment_list_of_startups.xml" value="0.10960144927536232" />
+        <entry key="..\:/AndroidStudioProjects/YourChance/app/src/main/res/layout/nav_header_main.xml" value="0.17831813576494426" />
+        <entry key="..\:/AndroidStudioProjects/YourChance/app/src/main/res/menu/activity_main_drawer.xml" value="0.3292517006802721" />
         <entry key="..\:/Users/Alex/AndroidStudioProjects/YourChance/app/src/main/res/drawable/ic_settings_black_36dp.xml" value="0.1365" />
         <entry key="..\:/Users/Alex/AndroidStudioProjects/YourChance/app/src/main/res/drawable/side_nav_bar.xml" value="0.1365" />
         <entry key="..\:/Users/Alex/AndroidStudioProjects/YourChance/app/src/main/res/layout/activity_google_auth.xml" value="0.11302083333333333" />
@@ -20,10 +26,16 @@
         <entry key="..\:/Users/Alex/AndroidStudioProjects/YourChance/app/src/main/res/layout/nav_header_main.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Alex/AndroidStudioProjects/YourChance/app/src/main/res/menu/activity_main_drawer.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Alex/AndroidStudioProjects/YourChance/app/src/main/res/menu/main.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Alexey/AndroidStudioProjects/YourChance/app/src/main/res/layout/activity_authentication.xml" value="0.296195652173913" />
+        <entry key="..\:/Users/Alexey/AndroidStudioProjects/YourChance/app/src/main/res/layout/activity_google_auth.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/Alexey/AndroidStudioProjects/YourChance/app/src/main/res/layout/content_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Alexey/AndroidStudioProjects/YourChance/app/src/main/res/layout/fragment_sign_in.xml" value="0.25" />
+        <entry key="..\:/Users/Alexey/AndroidStudioProjects/YourChance/app/src/main/res/layout/fragment_sign_up.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/Alexey/AndroidStudioProjects/YourChance/app/src/main/res/layout/nav_header_main.xml" value="0.18802083333333333" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

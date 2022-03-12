@@ -13,25 +13,26 @@
 
     <ImageView
         android:id="@+id/user_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
         android:contentDescription="@string/nav_header_desc"
         android:paddingTop="@dimen/activity_vertical_margin"
-        app:srcCompat="@mipmap/ic_launcher_round"
-        android:background="@null"/>
+        android:background="@null"
+        android:scaleType="fitXY" />
 
-<!--    <ImageButton-->
-<!--        android:id="@+id/settings_button"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:src="@drawable/ic_settings_black_36dp"-->
-<!--        android:paddingTop="@dimen/activity_vertical_margin"-->
-<!--        android:background="@null"-->
-<!--        app:tint="@color/white"-->
-<!--        android:layout_alignParentEnd="true"/>-->
+    <ImageView
+        android:id="@+id/settings_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:background="@null"
+        android:contentDescription="@string/user_profile"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:src="@drawable/ic_settings_black_36dp"
+        app:tint="@color/white" />
 
     <TextView
-        android:id="@+id/text_1"
+        android:id="@+id/user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/activity_vertical_margin"
@@ -40,9 +41,9 @@
         android:layout_below="@id/user_icon"/>
 
     <TextView
-        android:id="@+id/text_2"
+        android:id="@+id/user_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/nav_header_subtitle"
-        android:layout_below="@id/text_1"/>
+        android:layout_below="@id/user_name"/>
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package com.grigorenko.yourchance.ui.list_of_startups
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.grigorenko.yourchance.auth.AuthenticationActivity
+import com.grigorenko.yourchance.database.repo.FirebaseAuthRepo.Companion.firebaseAuth
 import com.grigorenko.yourchance.databinding.FragmentListOfStartupsBinding
 
 class ListOfStartupsFragment : Fragment() {
@@ -23,9 +26,9 @@ class ListOfStartupsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         listOfStartupsViewModel =
-            ViewModelProvider(this).get(ListOfStartupsViewModel::class.java)
+            ViewModelProvider(this)[ListOfStartupsViewModel::class.java]
 
         _binding = FragmentListOfStartupsBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -34,6 +37,12 @@ class ListOfStartupsFragment : Fragment() {
         listOfStartupsViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
+
+        binding.signOutButton.setOnClickListener {
+            firebaseAuth.signOut()
+            startActivity(Intent(context, AuthenticationActivity::class.java))
+            activity?.finish()
+        }
         return root
     }
 

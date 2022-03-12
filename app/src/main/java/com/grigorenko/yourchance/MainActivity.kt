@@ -1,24 +1,25 @@
 package com.grigorenko.yourchance
 
-import android.content.ContentValues
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.widget.ImageView
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.navigation.NavigationView
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.grigorenko.yourchance.databinding.ActivityMainBinding
 import com.grigorenko.yourchance.ui.user_profile.UserProfileActivity
+import com.squareup.picasso.Picasso
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,6 +31,11 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val userEmail = intent.getStringExtra("Email")
+        val userName = intent.getStringExtra("Name")
+        val userPhoneNumber = intent.getStringExtra("Phone")
+        val userPhoto = intent.getParcelableExtra<Uri>("Photo")
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
@@ -51,8 +57,21 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         val headVIew = navView.getHeaderView(0)
-        val imgProfile: ImageView = headVIew.findViewById(R.id.user_icon)
-        imgProfile.setOnClickListener {
+        headVIew.apply {
+            val textUserEmail = this.findViewById<TextView>(R.id.user_email)
+            textUserEmail.text = userEmail
+            val textUserName = this.findViewById<TextView>(R.id.user_name)
+            textUserName.text = userName
+            val textUserPhoto = this.findViewById<ImageView>(R.id.user_icon)
+            Log.d("123", "Uri user photo - $userPhoto")
+            Picasso.get()
+                .load(userPhoto)
+                .fit().centerCrop()
+                .into(textUserPhoto)
+        }
+
+        val settingsButton = headVIew.findViewById<ImageView>(R.id.settings_button)
+        settingsButton.setOnClickListener {
             val i = Intent(applicationContext, UserProfileActivity::class.java)
             startActivity(i)
         }
