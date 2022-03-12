@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.grigorenko.yourchance.auth.AuthenticationActivity
-import com.grigorenko.yourchance.database.repo.FirebaseAuthRepo.Companion.firebaseAuth
 import com.grigorenko.yourchance.databinding.FragmentListOfStartupsBinding
 
 class ListOfStartupsFragment : Fragment() {
@@ -37,12 +36,6 @@ class ListOfStartupsFragment : Fragment() {
         listOfStartupsViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
-
-        binding.signOutButton.setOnClickListener {
-            firebaseAuth.signOut()
-            startActivity(Intent(context, AuthenticationActivity::class.java))
-            activity?.finish()
-        }
         return root
     }
 

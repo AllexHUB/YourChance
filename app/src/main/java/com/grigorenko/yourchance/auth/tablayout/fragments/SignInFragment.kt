@@ -1,27 +1,26 @@
 package com.grigorenko.yourchance.auth.tablayout.fragments
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
 import com.grigorenko.yourchance.MainActivity
-import com.grigorenko.yourchance.database.repo.FirebaseAuthRepo.Companion.firebaseAuth
 import com.grigorenko.yourchance.databinding.FragmentSignInBinding
+import com.grigorenko.yourchance.viewmodel.StartuperViewModel
 
-class SignInFragment(private val signedUser: FirebaseUser?) : Fragment() {
+class SignInFragment() : Fragment() {
     private var _binding: FragmentSignInBinding? = null
     private val binding get() = _binding!!
+
+    private val startuperViewModel = StartuperViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,7 +32,7 @@ class SignInFragment(private val signedUser: FirebaseUser?) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        updateUi(signedUser)
+        updateUi(startuperViewModel.getStartuper())
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken("802209574608-k7mgkuo2geeh389kkcort2i1iqa5mlj5.apps.googleusercontent.com")
@@ -50,10 +49,15 @@ class SignInFragment(private val signedUser: FirebaseUser?) : Fragment() {
         binding.apply {
             signInButton.setOnClickListener {
                 if (validateEmail() and validatePassword())
-                    authWithEmail(
-                        this.emailField.text.toString(),
-                        this.passwordField.text.toString()
-                    )
+                    if (startuperViewModel.isStartuperAuthWithEmail(
+                            this.emailField.text.toString(),
+                            this.passwordField.text.toString()
+                        )
+                    ) {
+                        val currStartuper = startuperViewModel.getStartuper()
+                        updateUi(currStartuper)
+                    } else
+                        updateUi(null)
             }
             googleSignInButton.setOnClickListener {
                 val signInIntent = mGoogleSignInClient.signInIntent
@@ -78,45 +82,16 @@ class SignInFragment(private val signedUser: FirebaseUser?) : Fragment() {
             try {
                 // Signed in successfully, show authenticated UI.
                 val account = task.getResult(ApiException::class.java)!!
-                authWithGoogle(account.idToken!!)
+                if (startuperViewModel.isStartuperAuthWithGoogleAcc(account.idToken!!)) {
+                    val currStartuper = startuperViewModel.getStartuper()
+                    updateUi(currStartuper)
+                } else
+                    updateUi(null)
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
                 Log.w("ENTER", "signInResult:failed code=" + e.statusCode)
             }
         }
-
-    private fun authWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        firebaseAuth.signInWithCredential(credential)
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val user = firebaseAuth.currentUser
-                    updateUi(user)
-                } else {
-                    updateUi(null)
-                }
-            }
-    }
-
-    private fun authWithEmail(email: String, password: String) {
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "signInWithEmail:success")
-                    val user = firebaseAuth.currentUser
-                    updateUi(user)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "signInWithEmail:failure", task.exception)
-                    Toast.makeText(
-                        context, "Неверные данные авторизации!!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    updateUi(null)
-                }
-            }
-    }
 
     private fun updateUi(user: FirebaseUser?) {
         if (user != null) {

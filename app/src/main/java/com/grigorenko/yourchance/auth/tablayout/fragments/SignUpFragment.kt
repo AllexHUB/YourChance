@@ -1,6 +1,5 @@
 package com.grigorenko.yourchance.auth.tablayout.fragments
 
-import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,17 +7,18 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseUser
 import com.grigorenko.yourchance.MainActivity
-import com.grigorenko.yourchance.database.repo.FirebaseAuthRepo.Companion.firebaseAuth
 import com.grigorenko.yourchance.databinding.FragmentSignUpBinding
+import com.grigorenko.yourchance.viewmodel.StartuperViewModel
 import java.util.regex.Pattern
 
 class SignUpFragment : Fragment() {
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
+
+    private val startuperViewModel = StartuperViewModel()
 
     private val passwordPattern = Pattern.compile(
         "^" + "(?=.*[0-9])" +     //at least 1 digit
@@ -44,10 +44,14 @@ class SignUpFragment : Fragment() {
         binding.apply {
             signUpButton.setOnClickListener {
                 if (validateEmail() and validatePassword() and validatePhoneNumber())
-                    signUpWithEmail(
-                        this.emailField.text.toString(),
-                        this.passwordField.text.toString()
-                    )
+                    if (startuperViewModel.isStartuperCreatedWithEmail(
+                            this.emailField.text.toString(),
+                            this.passwordField.text.toString()
+                        )
+                    ) {
+                        val currStartuper = startuperViewModel.getStartuper()
+                        startuperViewModel.addNewStartuper(currStartuper!!.uid)
+                    }
             }
         }
     }
@@ -62,26 +66,6 @@ class SignUpFragment : Fragment() {
             phoneField.text?.clear()
             phoneContainer.error = null
         }
-    }
-
-    private fun signUpWithEmail(email: String, password: String) {
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(ContentValues.TAG, "createUserWithEmail:success")
-                    val user = firebaseAuth.currentUser
-                    updateUi(user)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(ContentValues.TAG, "createUserWithEmail:failure", task.exception)
-                    Toast.makeText(
-                        context, "Адрес электронной почты уже используется",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    updateUi(null)
-                }
-            }
     }
 
     private fun updateUi(user: FirebaseUser?) {
