@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.YourChance">
         <activity
-            android:name=".auth.AuthenticationActivity"
+            android:name=".auth.tablayout.AuthenticationActivity"
             android:exported="true"
             android:theme="@style/Theme.YourChance.NoActionBar"
             android:windowSoftInputMode="adjustPan">

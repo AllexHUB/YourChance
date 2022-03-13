@@ -2,6 +2,7 @@ package com.grigorenko.yourchance.database.repo
 
 import android.content.ContentValues
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -13,54 +14,47 @@ class FirebaseAuthRepo {
         }
     }
 
-    fun isStartuperCreatedWithEmail(email: String, password: String): Boolean {
-        var response = false
+    fun signUpWithEmail(email: String, password: String, user: MutableLiveData<FirebaseUser>) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
                     Log.d(ContentValues.TAG, "createUserWithEmail:success")
-                    response = true
+                    user.postValue(firebaseAuth.currentUser)
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w(ContentValues.TAG, "createUserWithEmail:failure", task.exception)
+                    user.postValue(null)
                 }
             }
-        return response
     }
 
-    fun isStartuperAuthWithGoogleAcc(idToken: String): Boolean {
-        var response = false
+    fun authWithGoogle(idToken: String, user: MutableLiveData<FirebaseUser>) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         firebaseAuth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d(ContentValues.TAG, "authStartuperWithGoogle:success")
-                    response = true
+                    user.postValue(firebaseAuth.currentUser)
                 } else {
                     Log.w(ContentValues.TAG, "authStartuperWithGoogle:failure", task.exception)
+                    user.postValue(null)
                 }
             }
-        return response
     }
 
-    fun isStartuperAuthWithEmail(email: String, password: String): Boolean {
-        var response = false
+    fun authWithEmail(email: String, password: String, user: MutableLiveData<FirebaseUser>) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
                     Log.d(ContentValues.TAG, "signInWithEmail:success")
-                    response = true
+                    user.postValue(firebaseAuth.currentUser)
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w(ContentValues.TAG, "signInWithEmail:failure", task.exception)
+                    user.postValue(null)
                 }
             }
-        return response
     }
 
-    fun getStartuper(): FirebaseUser? {
+    fun getUser(): FirebaseUser? {
         return firebaseAuth.currentUser
     }
 

@@ -1,4 +1,4 @@
-package com.grigorenko.yourchance.auth
+package com.grigorenko.yourchance.auth.tablayout
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

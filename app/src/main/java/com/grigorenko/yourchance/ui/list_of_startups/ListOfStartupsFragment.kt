@@ -1,6 +1,5 @@
 package com.grigorenko.yourchance.ui.list_of_startups
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +8,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.grigorenko.yourchance.auth.AuthenticationActivity
 import com.grigorenko.yourchance.databinding.FragmentListOfStartupsBinding
 
 class ListOfStartupsFragment : Fragment() {

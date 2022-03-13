@@ -8,31 +8,35 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseUser
 import com.grigorenko.yourchance.MainActivity
 import com.grigorenko.yourchance.databinding.FragmentSignInBinding
-import com.grigorenko.yourchance.viewmodel.StartuperViewModel
+import com.grigorenko.yourchance.viewmodel.AuthViewModel
 
-class SignInFragment() : Fragment() {
+class SignInFragment : Fragment() {
     private var _binding: FragmentSignInBinding? = null
     private val binding get() = _binding!!
 
-    private val startuperViewModel = StartuperViewModel()
+    private lateinit var authViewModel: AuthViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         _binding = FragmentSignInBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        updateUi(startuperViewModel.getStartuper())
+        updateUi(authViewModel.getUser())
+
+        // updateUi(startuperViewModel.getStartuper())
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken("802209574608-k7mgkuo2geeh389kkcort2i1iqa5mlj5.apps.googleusercontent.com")
@@ -46,18 +50,15 @@ class SignInFragment() : Fragment() {
         // the GoogleSignInAccount will be non-null.
         // Set the dimensions of the sign-in button.
 
+        authViewModel.user.observe(viewLifecycleOwner) {
+            updateUi(it)
+        }
+
         binding.apply {
             signInButton.setOnClickListener {
                 if (validateEmail() and validatePassword())
-                    if (startuperViewModel.isStartuperAuthWithEmail(
-                            this.emailField.text.toString(),
-                            this.passwordField.text.toString()
-                        )
-                    ) {
-                        val currStartuper = startuperViewModel.getStartuper()
-                        updateUi(currStartuper)
-                    } else
-                        updateUi(null)
+                    authViewModel.authWithEmail(this.emailField.text.toString(),
+                                                this.passwordField.text.toString())
             }
             googleSignInButton.setOnClickListener {
                 val signInIntent = mGoogleSignInClient.signInIntent
@@ -82,11 +83,7 @@ class SignInFragment() : Fragment() {
             try {
                 // Signed in successfully, show authenticated UI.
                 val account = task.getResult(ApiException::class.java)!!
-                if (startuperViewModel.isStartuperAuthWithGoogleAcc(account.idToken!!)) {
-                    val currStartuper = startuperViewModel.getStartuper()
-                    updateUi(currStartuper)
-                } else
-                    updateUi(null)
+                authViewModel.authWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
                 Log.w("ENTER", "signInResult:failed code=" + e.statusCode)

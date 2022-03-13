@@ -1,9 +1,10 @@
 package com.grigorenko.yourchance.database.repo
 
-import android.content.ContentValues
-import android.content.ContentValues.TAG
+import android.nfc.Tag
 import android.util.Log
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.grigorenko.yourchance.database.model.User
 
 class FirestoreRepo {
     companion object {
@@ -12,14 +13,20 @@ class FirestoreRepo {
         }
     }
 
-    fun addNewStartuper(startuperUID: String) {
-        firestoreInstance.collection("startuper")
-            .add(startuperUID)
-            .addOnSuccessListener { documentReference ->
-                Log.d(ContentValues.TAG, "Startuper added with ID: ${documentReference.id}")
+    fun addNewUser(firebaseUser: FirebaseUser, name: String, phoneNumber: String) {
+        val user = User(
+            firebaseUser.email!!,
+            name,
+            phoneNumber
+        )
+        firestoreInstance.collection("users")
+            .document(firebaseUser.uid)
+            .set(user)
+            .addOnSuccessListener {
+                Log.d("USER", "Adding new user in Firestore successfully")
             }
-            .addOnFailureListener { e ->
-                Log.w(ContentValues.TAG, "Error adding startuper", e)
+            .addOnFailureListener {
+                Log.e("USER", "Error adding new user ")
             }
     }
 }
