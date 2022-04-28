@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@+id/nav_list_of_startups">
+
+    <fragment
+        android:id="@+id/nav_list_of_startups"
+        android:name="com.grigorenko.yourchance.ui.list_of_startups.tablayout.ListOfStartupsFragment"
+        android:label="@string/menu_startups"
+        tools:layout="@layout/fragment_list_of_startups" >
+        <action
+            android:id="@+id/action_nav_list_of_startups_to_selectedStartupFragment"
+            app:destination="@id/selectedStartupFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_messages"
+        android:name="com.grigorenko.yourchance.ui.messages.MessagesFragment"
+        android:label="@string/menu_messages"
+        tools:layout="@layout/fragment_messages" />
+
+    <fragment
+        android:id="@+id/nav_my_startup"
+        android:name="com.grigorenko.yourchance.ui.my_startups.fragments.MyStartupFragment"
+        android:label="@string/menu_my_startup"
+        tools:layout="@layout/fragment_my_startup" >
+        <action
+            android:id="@+id/action_nav_my_startup_to_create_startup_navigation"
+            app:destination="@id/create_startup_navigation" />
+        <action
+            android:id="@+id/action_nav_my_startup_to_editStartupFragment"
+            app:destination="@id/editStartupFragment" />
+    </fragment>
+
+    <activity
+        android:id="@+id/nav_user_profile"
+        android:name="com.grigorenko.yourchance.ui.user_profile.UserProfileActivity"
+        android:label="activity_user_profile"
+        tools:layout="@layout/activity_user_profile" />
+
+    <include app:graph="@navigation/create_startup_navigation" />
+
+    <fragment
+        android:id="@+id/editStartupFragment"
+        android:name="com.grigorenko.yourchance.ui.my_startups.fragments.EditStartupFragment"
+        android:label="Редактирование" >
+        <action
+            android:id="@+id/action_editStartupFragment_to_nav_my_startup"
+            app:destination="@id/nav_my_startup" />
+        <argument
+            android:name="startup"
+            app:argType="com.grigorenko.yourchance.database.model.Startup" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectedStartupFragment"
+        android:name="com.grigorenko.yourchance.ui.list_of_startups.tablayout.SelectedStartupFragment"
+        android:label="Стартап" >
+        <argument
+            android:name="startup"
+            app:argType="com.grigorenko.yourchance.database.model.Startup" />
+    </fragment>
+
+</navigation>

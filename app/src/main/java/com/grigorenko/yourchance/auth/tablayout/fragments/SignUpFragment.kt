@@ -7,20 +7,23 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import com.google.firebase.auth.FirebaseUser
-import com.grigorenko.yourchance.MainActivity
+import com.grigorenko.yourchance.database.model.Image
+import com.grigorenko.yourchance.database.model.User
+import com.grigorenko.yourchance.database.viewmodel.AuthViewModel
+import com.grigorenko.yourchance.database.viewmodel.UserViewModel
 import com.grigorenko.yourchance.databinding.FragmentSignUpBinding
-import com.grigorenko.yourchance.viewmodel.AuthViewModel
+import com.grigorenko.yourchance.ui.MainActivity
 import java.util.regex.Pattern
 
 class SignUpFragment : Fragment() {
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var authViewModel: AuthViewModel
+    private val authViewModel: AuthViewModel by activityViewModels()
+    private val userViewModel: UserViewModel by activityViewModels()
 
     private val passwordPattern = Pattern.compile(
         "^" + "(?=.*[0-9])" +     //at least 1 digit
@@ -36,7 +39,6 @@ class SignUpFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         _binding = FragmentSignUpBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -44,20 +46,27 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        authViewModel.user.observe(viewLifecycleOwner) {
+        authViewModel.firebaseUser.observe(viewLifecycleOwner) {
             if (it != null) {
-                authViewModel.addNewUser(it,
-                                         binding.nameField.text.toString(),
-                                         binding.phoneField.text.toString())
+                val user = User(
+                    binding.emailField.text.toString(),
+                    binding.nameField.text.toString(),
+                    binding.phoneField.text.toString(),
+                    listOf(),
+                    Image()
+                )
+                userViewModel.addNewUser(it.uid, user)
                 updateUi(it)
             }
         }
 
         binding.apply {
             signUpButton.setOnClickListener {
-                if (validateEmail() and validatePassword() and validatePhoneNumber())
-                    authViewModel.signUpWithEmail(this.emailField.text.toString(),
-                                                  this.passwordField.text.toString())
+                if (validateName() and validateEmail() and validatePassword() and validatePhoneNumber())
+                    authViewModel.signUpWithEmail(
+                        this.emailField.text.toString(),
+                        this.passwordField.text.toString()
+                    )
             }
         }
     }
@@ -65,6 +74,8 @@ class SignUpFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         binding.apply {
+            nameContainer.error = null
+            nameField.text?.clear()
             emailField.text?.clear()
             emailContainer.error = null
             passwordField.text?.clear()
@@ -77,16 +88,29 @@ class SignUpFragment : Fragment() {
     private fun updateUi(user: FirebaseUser?) {
         if (user != null) {
             val mainActivity = Intent(context, MainActivity::class.java)
-            user.apply {
-                mainActivity.putExtra("Email", binding.emailField.text.toString())
-                mainActivity.putExtra("Name", binding.nameField.text.toString())
-                mainActivity.putExtra("Phone", binding.phoneField.text.toString())
-                mainActivity.putExtra("Photo", this.photoUrl)
-            }
+            mainActivity.putExtra("UID", user.uid)
             startActivity(mainActivity)
             activity?.finish()
         } else {
             Log.e("AUTH", "User is null")
+        }
+    }
+
+    private fun validateName(): Boolean {
+        val nameInput = binding.nameField.text.toString()
+        return when {
+            nameInput.isEmpty() -> {
+                binding.nameContainer.error = "Поле не может быть пустым"
+                false
+            }
+            nameInput.length < 10 -> {
+                binding.nameContainer.error = "Введите Ваше имя полностью"
+                false
+            }
+            else -> {
+                binding.emailContainer.error = null
+                true
+            }
         }
     }
 

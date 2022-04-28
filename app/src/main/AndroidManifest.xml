@@ -6,13 +6,13 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_your_chance_icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.YourChance">
         <activity
-            android:name=".auth.tablayout.AuthenticationActivity"
+            android:name="com.grigorenko.yourchance.auth.tablayout.activity.AuthenticationActivity"
             android:exported="true"
             android:theme="@style/Theme.YourChance.NoActionBar"
             android:windowSoftInputMode="adjustPan">
@@ -23,12 +23,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.grigorenko.yourchance.ui.MainActivity"
             android:exported="false"
             android:theme="@style/Theme.YourChance.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ui.user_profile.UserProfileActivity"
+            android:name="com.grigorenko.yourchance.ui.user_profile.UserProfileActivity"
             android:exported="false"
             android:label="@string/title_activity_user_profile"
             android:theme="@style/Theme.YourChance.NoActionBar"

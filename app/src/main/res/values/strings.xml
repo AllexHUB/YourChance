@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">YourChance</string>
+    <string name="app_name">YChance</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Полное имя</string>
@@ -7,20 +7,13 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_startups">Список всех стартапов</string>
-    <string name="menu_my_startup">Мой стартап</string>
+    <string name="menu_startups">Список стартапов</string>
+    <string name="menu_my_startup">Мои стартапы</string>
     <string name="menu_messages">Сообщения</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">This is User Profile!</string>
-    <string name="title_activity_user_profile">UserProfileActivity</string>
+    <string name="title_activity_user_profile">Профиль пользователя</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="user_profile">User Profile</string>
     <string name="email">Email</string>
     <string name="password">Пароль</string>
@@ -29,4 +22,43 @@
     <string name="phone_number">Номер телефона</string>
     <string name="sign_out">Выйти из профиля</string>
     <string name="full_name">ФИО</string>
+    <string name="text_next">Далее</string>
+    <string name="text_startup_name">Введите название</string>
+    <string name="text_money_invest">Введите необходимую сумму</string>
+    <string name="text_description_startup">Введите описание</string>
+    <string name="category">Категория</string>
+    <string name="text_select_image">выбрать фото</string>
+    <string name="add_startup">Add startup</string>
+    <string name="location">Локация</string>
+    <string name="amount_of_views">Просмотры</string>
+    <string name="startup_image">Фото стартапа</string>
+    <string name="text_edit">Редактировать</string>
+    <string name="text_delete">Удалить</string>
+    <string name="text_money_invest_value">$ 0.0</string>
+    <string name="text_country">Введите название страны</string>
+    <string name="text_city">Введите название города</string>
+    <string name="text_views_value">1000</string>
+    <string name="text_whole_sum_money">нужно</string>
+    <string name="text_collected_sum_money">собрано</string>
+    <string name="startup_name">Название</string>
+    <string name="startup_location">Расположение</string>
+    <string name="startup_description">Описание</string>
+    <string name="startup_money_invest">Сумма для инвестиций</string>
+    <string name="startup_category">Категория</string>
+    <string name="confirm_changes">Подтвердить изменения</string>
+
+    <string name="set_location">%1$s, %2$s</string>
+
+    <string name="business">Бизнес</string>
+    <string name="food">Еда</string>
+    <string name="art">Искусство</string>
+    <string name="society">Общество</string>
+    <string name="it">IT</string>
+    <string name="technology">Технологии</string>
+    <string name="trip">Путешествия</string>
+    <string name="sport">Спорт</string>
+    <string name="sort_by_сategory">По категории</string>
+    <string name="sort_by_money_invest">По сумме инвестиций</string>
+    <string name="text_collected_sum">Собранная сумма</string>
+    <string name="text_write_to_author">Написать автору</string>
 </resources>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/business"
+        android:title="@string/business"
+        android:icon="@drawable/ic_business_category_black_24dp"/>
+    <item
+        android:id="@+id/food"
+        android:title="@string/food"
+        android:icon="@drawable/ic_food_category_black_24dp"/>
+    <item
+        android:id="@+id/art"
+        android:title="@string/art"
+        android:icon="@drawable/ic_art_category_black_24dp"/>
+    <item
+        android:id="@+id/society"
+        android:title="@string/society"
+        android:icon="@drawable/ic_society_category_black_24dp"/>
+    <item
+        android:id="@+id/it"
+        android:title="@string/it"
+        android:icon="@drawable/ic_it_category_black_24dp"/>
+    <item
+        android:id="@+id/technology"
+        android:title="@string/technology"
+        android:icon="@drawable/ic_techn_category_black_24dp"/>
+    <item
+        android:id="@+id/trip"
+        android:title="@string/trip"
+        android:icon="@drawable/ic_trip_category_black_24dp"/>
+    <item
+        android:id="@+id/sport"
+        android:title="@string/sport"
+        android:icon="@drawable/ic_sport_category_black_24dp"/>
+</menu>
