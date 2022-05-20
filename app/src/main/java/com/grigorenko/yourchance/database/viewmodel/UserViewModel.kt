@@ -8,20 +8,20 @@ import com.grigorenko.yourchance.database.model.User
 import com.grigorenko.yourchance.database.repo.FirebaseAuthRepo
 import com.grigorenko.yourchance.database.repo.FirestoreRepo
 
-class UserViewModel: ViewModel() {
+class UserViewModel : ViewModel() {
     private val firestoreRepo = FirestoreRepo()
     private val firebaseAuthRepo = FirebaseAuthRepo()
 
-    val userModel: MutableLiveData<User> by lazy {
-        MutableLiveData<User>()
-    }
+    val userExists = MutableLiveData<Boolean>()
+
+    val userModel = MutableLiveData<User>()
 
     fun getUserByUID(userUID: String) {
         firestoreRepo.getUserByUID(userUID, userModel)
     }
 
     fun addNewUser(userUID: String, user: User) {
-        firestoreRepo.addNewUser(userUID, user)
+        firestoreRepo.addNewUser(userUID, user, userModel)
     }
 
     fun getCurrentUserUID(): String {
@@ -30,5 +30,9 @@ class UserViewModel: ViewModel() {
 
     fun updateUserIcon(userUID: String, icon: Image, iconDrawable: Drawable) {
         firestoreRepo.updateUserIcon(userUID, icon, iconDrawable)
+    }
+
+    fun checkForUserExists(email: String) {
+        firestoreRepo.checkForUserExists(email, userExists)
     }
 }

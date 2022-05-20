@@ -61,4 +61,19 @@
     <string name="sort_by_money_invest">По сумме инвестиций</string>
     <string name="text_collected_sum">Собранная сумма</string>
     <string name="text_write_to_author">Написать автору</string>
+    <string name="text_forget_password"><u>Забыли пароль?</u></string>
+    <string name="startuper">Стартапер</string>
+    <string name="investor">Инвестор</string>
+    <string name="who_Are_you">Вы кто?</string>
+    <string name="title_activity_investor">InvestorActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="menu_favorite_startups">Избранные стартапы</string>
+    <string name="type_a_message">Написать сообщение...</string>
 </resources>

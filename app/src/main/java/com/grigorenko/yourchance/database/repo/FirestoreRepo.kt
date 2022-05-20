@@ -12,9 +12,7 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
-import com.grigorenko.yourchance.database.model.Image
-import com.grigorenko.yourchance.database.model.Startup
-import com.grigorenko.yourchance.database.model.User
+import com.grigorenko.yourchance.database.model.*
 import java.io.ByteArrayOutputStream
 
 class FirestoreRepo {
@@ -25,53 +23,75 @@ class FirestoreRepo {
         private val storage: FirebaseStorage by lazy {
             Firebase.storage
         }
-        private val storageRef = storage.reference
     }
 
     private val userRef = firestoreInstance.collection("users")
     private val startupRef = firestoreInstance.collection("startups")
+    private val chatRef = firestoreInstance.collection("chats")
+    private val storageRef = storage.reference
 
-    fun addNewUser(userUID: String, user: User) {
+    fun addNewUser(userUID: String, user: User, retrievedUser: MutableLiveData<User>) {
         userRef.document(userUID)
-            .set(user, SetOptions.merge())
+            .set(user)
             .addOnSuccessListener {
+                retrievedUser.value = user
                 Log.d("USER", "Adding new user in Firestore successfully")
             }
             .addOnFailureListener {
+                retrievedUser.value = null
                 Log.e("USER", "Error adding new user ")
+            }
+    }
+
+    fun checkForUserExists(email: String, userExists: MutableLiveData<Boolean>) {
+        userRef
+            .whereEqualTo("email", email)
+            .get()
+            .addOnSuccessListener {
+                if (it.documents.size != 0)
+                    userExists.postValue(true)
+                else
+                    userExists.postValue(false)
             }
     }
 
     fun getUserByUID(userUID: String, retrievedUser: MutableLiveData<User>) {
         userRef.document(userUID)
-            .addSnapshotListener { value, error ->
-                if (error != null) {
-                    retrievedUser.postValue(null)
-                    Log.e("USER", "Get user failed with ", error)
-                }
-
-                if (value != null) {
-                    retrievedUser.postValue(value.toObject<User>())
-                    Log.d("USER", "User received")
-                }
+            .get()
+            .addOnSuccessListener {
+                retrievedUser.value = it.toObject(User::class.java)
+                Log.d("USER", "User received")
+            }.addOnFailureListener {
+                retrievedUser.value = null
             }
     }
 
     fun addNewStartupToFirestore(imgDrawable: Drawable, startup: Startup, userUID: String) {
         uploadImage(imgDrawable, startup.image.name).addOnSuccessListener { uri ->
             startup.image.uri = uri.toString()
-            startupRef.document()
+            val newStartup = startupRef.document()
+            newStartup
                 .set(startup)
                 .addOnSuccessListener {
-                    Log.d("STARTUP", "Adding new startup in Firestore successfully")
-                    getStartupIdByImage(startup.image).addOnSuccessListener {
-                        for (document in it)
-                            addNewStartupToUser(userUID, document.id)
-                    }
+                    addNewStartupToUser(userUID, newStartup.id)
                 }
-                .addOnFailureListener {
-                    Log.e("STARTUP", "Error adding new startup ")
-                }
+        }
+    }
+
+    fun addStartupToFavorites(userUID: String, startupImage: Image) {
+        getStartupIdByImage(startupImage).addOnSuccessListener {
+            for (document in it) {
+                addNewStartupToUser(userUID, document.id)
+            }
+        }
+    }
+
+    fun deleteStartupFromFavorites(userUID: String, startup: Startup) {
+        getStartupIdByImage(startup.image).addOnSuccessListener {
+            for (document in it) {
+                userRef.document(userUID)
+                    .update("startupID", FieldValue.arrayRemove(document.id))
+            }
         }
     }
 
@@ -83,48 +103,25 @@ class FirestoreRepo {
                     return@addSnapshotListener
                 }
 
-                if (value?.get("startupID") != null && value.get("startupID").toString() != "[]") {
-                    val user = value.toObject<User>()!!
+                val user = value?.toObject(User::class.java)!!
+                if (!user.startupID.isNullOrEmpty()) {
                     getUserStartups(user.startupID, userStartups)
                 } else {
-                    Log.d("STARTUP", "Current data: null")
                     userStartups.postValue(null)
+                    Log.d("STARTUP", "Current data: null")
                 }
             }
     }
 
-    private fun getUserStartups(
-        listOfStartupId: List<String>,
-        userStartups: MutableLiveData<List<Startup>>
-    ) {
-        val list = mutableListOf<Startup>()
-        for (startupId in listOfStartupId) {
-            startupRef.document(startupId)
-                .get()
-                .addOnSuccessListener { document ->
-                    list.add(document.toObject<Startup>()!!)
+    fun deleteUserStartup(startupImage: Image) {
+        getStartupIdByImage(startupImage).addOnSuccessListener { snapshot ->
+            for (document in snapshot) {
+                removeStartupIdFromUsers(document.id).addOnCompleteListener {
+                    startupRef.document(document.id)
+                        .delete()
+                    storageRef.child(startupImage.name)
+                        .delete()
                 }
-                .addOnCompleteListener {
-                    userStartups.postValue(list)
-                }
-        }
-    }
-
-    fun deleteUserStartup(userUID: String, startup: Startup) {
-        getStartupIdByImage(startup.image).addOnSuccessListener {
-            for (document in it) {
-                userRef.document(userUID)
-                    .update("startupID", FieldValue.arrayRemove(document.id))
-                    .addOnSuccessListener {
-                        startupRef.document(document.id)
-                            .delete()
-                            .addOnSuccessListener {
-                                Log.d("STARTUP", "Startup with id ${document.id} was deleted")
-                                storageRef.child(startup.image.name).delete()
-                            }.addOnFailureListener {
-                                Log.e("STARTUP", "Deletion error of startup with id ${document.id}")
-                            }
-                    }
             }
         }
     }
@@ -198,9 +195,127 @@ class FirestoreRepo {
         }
     }
 
+    fun addMessageToChat(userIds: List<String>, message: Message) {
+        getOrCreateChat(userIds) {
+            chatRef.document(it).collection("messages").document()
+                .set(message)
+        }
+    }
+
+    fun manageChatMessages(userIds: List<String>, messages: MutableLiveData<List<Message>>) {
+        getOrCreateChat(userIds) {
+            loadChatMessages(it, messages)
+        }
+    }
+
+    fun getUserChats(
+        userUID: String,
+        userChatsPresentation: MutableLiveData<List<ChatPresentation>>
+    ) {
+        val chatPresentation = mutableListOf<ChatPresentation>()
+        userRef.document(userUID).collection("engagedChats")
+            .get()
+            .addOnSuccessListener { snapshot ->
+                if (snapshot.documents.size != 0) {
+                    for (document in snapshot.documents) {
+                        userRef.document(document.id)
+                            .get()
+                            .addOnSuccessListener { userDocument ->
+                                val companion = userDocument.toObject(User::class.java)!!
+                                getExistingChat(document["chatId"].toString()) { chat ->
+                                    val lastMessage = if (!chat.messages.isNullOrEmpty()) {
+                                        chat.messages.last()
+                                    } else {
+                                        Message()
+                                    }
+                                    chatPresentation.add(
+                                        ChatPresentation(
+                                            companion,
+                                            userUID,
+                                            document.id,
+                                            lastMessage
+                                        )
+                                    )
+                                    userChatsPresentation.postValue(chatPresentation)
+                                }
+                            }
+                    }
+                }
+            }
+    }
+
+    private fun getExistingChat(chatId: String, onComplete: (chat: Chat) -> Unit) {
+        chatRef.document(chatId)
+            .get()
+            .addOnSuccessListener { document ->
+                document.reference.collection("messages").get()
+                    .addOnSuccessListener { messagesSnapshot ->
+                        val tempChat = document.toObject(Chat::class.java)!!
+                        val tempMessages = mutableListOf<Message>()
+                        for (i in messagesSnapshot.documents)
+                            tempMessages.add(i.toObject(Message::class.java)!!)
+                        onComplete(Chat(tempChat.userIds, tempMessages))
+                    }
+            }
+    }
+
+    private fun loadChatMessages(chatId: String, messages: MutableLiveData<List<Message>>) {
+        val listMessages = mutableListOf<Message>()
+        chatRef.document(chatId).collection("messages")
+            .orderBy("date", Query.Direction.ASCENDING)
+            .addSnapshotListener { value, error ->
+                listMessages.clear()
+                if (error != null) {
+                    Log.w("CHAT", "Listen failed.", error)
+                    return@addSnapshotListener
+                }
+
+                for (message in value!!.documents)
+                    listMessages.add(message.toObject<Message>()!!)
+                messages.postValue(listMessages)
+            }
+    }
+
+    private fun getOrCreateChat(userIds: List<String>, onComplete: (channelId: String) -> Unit) {
+        userRef.document(userIds[0])
+            .get()
+            .addOnSuccessListener { user ->
+                user.reference.collection("engagedChats").document(userIds[1])
+                    .get()
+                    .addOnSuccessListener { taskDocument ->
+                        if (taskDocument.data != null)
+                            onComplete(taskDocument["chatId"].toString())
+                        else {
+                            val newChat = chatRef.document()
+                            newChat.set(hashMapOf("userIds" to userIds))
+                            userRef.document(userIds[0]).collection("engagedChats")
+                                .document(userIds[1])
+                                .set(hashMapOf("chatId" to newChat.id))
+                            userRef.document(userIds[1]).collection("engagedChats")
+                                .document(userIds[0])
+                                .set(hashMapOf("chatId" to newChat.id))
+                            onComplete(newChat.id)
+                        }
+                    }
+            }
+    }
+
+
     private fun addNewStartupToUser(userUid: String, startupId: String) {
         firestoreInstance.collection("users").document(userUid)
             .update("startupID", FieldValue.arrayUnion(startupId))
+    }
+
+    private fun removeStartupIdFromUsers(startupId: String): Task<QuerySnapshot> {
+        return userRef
+            .whereArrayContains("startupID", startupId)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                for (document in snapshot.documents) {
+                    userRef.document(document.id)
+                        .update("startupID", FieldValue.arrayRemove(startupId))
+                }
+            }
     }
 
     private fun updateStartupDetails(
@@ -208,9 +323,9 @@ class FirestoreRepo {
         startup: Startup,
         isStartupUpdated: MutableLiveData<Boolean>
     ) {
-        firestoreInstance.collection("startups")
+        startupRef
             .document(startupId)
-            .set(startup)
+            .set(startup, SetOptions.merge())
             .addOnCompleteListener {
                 isStartupUpdated.postValue(true)
             }.addOnFailureListener {
@@ -238,8 +353,25 @@ class FirestoreRepo {
     }
 
     private fun getStartupIdByImage(image: Image): Task<QuerySnapshot> {
-        return firestoreInstance.collection("startups")
+        return startupRef
             .whereEqualTo("image", image)
             .get()
+    }
+
+    private fun getUserStartups(
+        listOfStartupId: List<String>,
+        userStartups: MutableLiveData<List<Startup>>
+    ) {
+        val list = mutableListOf<Startup>()
+        for (startupId in listOfStartupId) {
+            startupRef.document(startupId)
+                .get()
+                .addOnSuccessListener { document ->
+                    list.add(document.toObject(Startup::class.java)!!)
+                }
+                .addOnCompleteListener {
+                    userStartups.postValue(list)
+                }
+        }
     }
 }

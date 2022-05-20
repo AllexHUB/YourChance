@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.google.firebase.auth.FirebaseUser
+import com.grigorenko.yourchance.R
 import com.grigorenko.yourchance.database.model.Image
 import com.grigorenko.yourchance.database.model.User
 import com.grigorenko.yourchance.database.viewmodel.AuthViewModel
@@ -24,6 +24,8 @@ class SignUpFragment : Fragment() {
 
     private val authViewModel: AuthViewModel by activityViewModels()
     private val userViewModel: UserViewModel by activityViewModels()
+
+    private var userType = "Startuper"
 
     private val passwordPattern = Pattern.compile(
         "^" + "(?=.*[0-9])" +     //at least 1 digit
@@ -53,10 +55,11 @@ class SignUpFragment : Fragment() {
                     binding.nameField.text.toString(),
                     binding.phoneField.text.toString(),
                     listOf(),
-                    Image()
+                    Image(),
+                    userType
                 )
                 userViewModel.addNewUser(it.uid, user)
-                updateUi(it)
+                updateUi(user)
             }
         }
 
@@ -67,6 +70,16 @@ class SignUpFragment : Fragment() {
                         this.emailField.text.toString(),
                         this.passwordField.text.toString()
                     )
+            }
+            radioGroup.setOnCheckedChangeListener { _, checkedId ->
+                when (checkedId) {
+                    R.id.startuper_rb -> {
+                        userType = "Startuper"
+                    }
+                    R.id.investor_rb -> {
+                        userType = "Investor"
+                    }
+                }
             }
         }
     }
@@ -85,11 +98,11 @@ class SignUpFragment : Fragment() {
         }
     }
 
-    private fun updateUi(user: FirebaseUser?) {
+    private fun updateUi(user: User?) {
         if (user != null) {
-            val mainActivity = Intent(context, MainActivity::class.java)
-            mainActivity.putExtra("UID", user.uid)
-            startActivity(mainActivity)
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra("user", user)
+            startActivity(intent)
             activity?.finish()
         } else {
             Log.e("AUTH", "User is null")

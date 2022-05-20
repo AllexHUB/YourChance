@@ -1,9 +1,9 @@
 package com.grigorenko.yourchance.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
@@ -16,12 +16,13 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.grigorenko.yourchance.R
+import com.grigorenko.yourchance.database.model.User
+import com.grigorenko.yourchance.database.viewmodel.StartupViewModel
 import com.grigorenko.yourchance.database.viewmodel.UserViewModel
 import com.grigorenko.yourchance.databinding.ActivityMainBinding
-import com.grigorenko.yourchance.ui.list_of_startups.NavigationDrawerDisabler
-import com.grigorenko.yourchance.ui.list_of_startups.tablayout.SelectedStartupFragment
+import com.grigorenko.yourchance.ui.startuper.list_of_startups.interfaces.NavigationDrawerDisabler
+import com.grigorenko.yourchance.ui.startuper.user_profile.UserProfileActivity
 import com.squareup.picasso.Picasso
-
 
 class MainActivity : AppCompatActivity(), NavigationDrawerDisabler {
 
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity(), NavigationDrawerDisabler {
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var userViewModel: UserViewModel
+    private lateinit var startupViewModel: StartupViewModel
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var toolbar: Toolbar
@@ -36,59 +38,63 @@ class MainActivity : AppCompatActivity(), NavigationDrawerDisabler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
+        startupViewModel = ViewModelProvider(this)[StartupViewModel::class.java]
+        val user = intent.getParcelableExtra<User>("user")
+
         val userUID = userViewModel.getCurrentUserUID()
-        userViewModel.getUserByUID(userUID)
+        startupViewModel.manageUserStartups(userUID)
 
-        toolbar = binding.appBarMain.toolbar
+        toolbar = binding.appBar.toolbar
         setSupportActionBar(toolbar)
-
         drawerLayout = binding.drawerLayout
+
         val navView: NavigationView = binding.navView
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.nav_list_of_startups, R.id.nav_messages, R.id.nav_my_startup
-            ), drawerLayout
-        )
+        val navController = findNavController(R.id.nav_host_fragment)
+        val headView = navView.getHeaderView(0)
+
+        if (user!!.type == "Startuper") {
+            appBarConfiguration = AppBarConfiguration(
+                setOf(
+                    R.id.list_of_startups, R.id.messages, R.id.my_startups
+                ), drawerLayout
+            )
+            navView.inflateMenu(R.menu.activity_startuper_drawer)
+        } else {
+            appBarConfiguration = AppBarConfiguration(
+                setOf(
+                    R.id.list_of_startups, R.id.messages, R.id.favorite_startups
+                ), drawerLayout
+            )
+            navView.inflateMenu(R.menu.activity_investor_drawer)
+        }
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        val headVIew = navView.getHeaderView(0)
+        val textUserEmail = headView.findViewById<TextView>(R.id.user_email)
+        textUserEmail.text = user.email
+        val textUserName = headView.findViewById<TextView>(R.id.user_name)
+        textUserName.text = user.fullName
+        val userIcon = headView.findViewById<ImageView>(R.id.user_icon)
+        if (user.icon.uri != "")
+            Picasso.get()
+                .load(user.icon.uri.toUri())
+                .fit().centerCrop()
+                .into(userIcon)
 
-        userViewModel.userModel.observe(this) {
-            if (it != null) {
-                val textUserEmail = headVIew.findViewById<TextView>(R.id.user_email)
-                textUserEmail.text = it.email
-                val textUserName = headVIew.findViewById<TextView>(R.id.user_name)
-                textUserName.text = it.fullName
-                val userIcon = headVIew.findViewById<ImageView>(R.id.user_icon)
-                if (it.icon.uri != "")
-                    Picasso.get()
-                        .load(it.icon.uri.toUri())
-                        .fit().centerCrop()
-                        .into(userIcon)
-            }
+        val settingsButton = headView.findViewById<ImageView>(R.id.settings_button)
+        settingsButton.setOnClickListener {
+            val intent = Intent(this, UserProfileActivity::class.java)
+            startActivity(intent)
         }
-
-        val settingsButton = headVIew.findViewById<ImageView>(R.id.settings_button)
-//        settingsButton.setOnClickListener {
-//            val fragment = supportFragmentManager.findFragmentById()
-//            val tt = R.layout.fragment_selected_startup
-//            if (fragment != null)
-//                Toast.makeText(this, "NOT NULL", Toast.LENGTH_SHORT).show()
-//            else
-//                Toast.makeText(this, "NULL", Toast.LENGTH_SHORT).show()
-//        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 

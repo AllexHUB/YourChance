@@ -11,9 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FirebaseUser
+import com.grigorenko.yourchance.auth.tablayout.activity.AuthenticationActivity
 import com.grigorenko.yourchance.database.model.Image
 import com.grigorenko.yourchance.database.model.User
 import com.grigorenko.yourchance.database.viewmodel.AuthViewModel
@@ -28,38 +29,71 @@ class SignInFragment : Fragment() {
     private val authViewModel: AuthViewModel by activityViewModels()
     private val userViewModel: UserViewModel by activityViewModels()
 
-    private val isGoogleAuthRequired: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>()
-    }
+    private lateinit var mGoogleSignInClient: GoogleSignInClient
+    private val isGoogleAuthRequired = MutableLiveData<Boolean>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        updateUi(authViewModel.checkedForSignedUser())
         _binding = FragmentSignInBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as AuthenticationActivity).disableTabLayout()
+
+        val signedUser = authViewModel.checkedForSignedUser()
+        if (signedUser != null)
+            userViewModel.apply {
+                getUserByUID(signedUser.uid)
+                userModel.observe(viewLifecycleOwner) { user ->
+                    updateUi(user)
+                }
+            }
+        else {
+            (activity as AuthenticationActivity).enableTabLayout()
+            binding.apply {
+                emailContainer.visibility = View.VISIBLE
+                passwordContainer.visibility = View.VISIBLE
+                signInButton.visibility = View.VISIBLE
+                forgetPasswordField.visibility = View.VISIBLE
+                googleSignInButton.visibility = View.VISIBLE
+            }
+        }
 
         authViewModel.firebaseUser.observe(viewLifecycleOwner) { firebaseUser ->
             isGoogleAuthRequired.observe(viewLifecycleOwner) { isGoogleAuth ->
-                if (isGoogleAuth && firebaseUser != null) {
-                    val user = User(
-                        firebaseUser.email.toString(),
-                        firebaseUser.displayName.toString(),
-                        firebaseUser.phoneNumber.toString(),
-                        listOf(),
-                        Image(
-                            System.currentTimeMillis().toString(),
-                            firebaseUser.photoUrl.toString()
-                        )
-                    )
-                    userViewModel.addNewUser(firebaseUser.uid, user)
+                if (firebaseUser != null) {
+                    if (isGoogleAuth) {
+                        userViewModel.apply {
+                            checkForUserExists(firebaseUser.email.toString())
+                            userExists.observe(viewLifecycleOwner) {
+                                if (!it) {
+                                    val user = User(
+                                        firebaseUser.email.toString(),
+                                        firebaseUser.displayName.toString(),
+                                        firebaseUser.phoneNumber.toString(),
+                                        listOf(),
+                                        Image(
+                                            System.currentTimeMillis().toString(),
+                                            firebaseUser.photoUrl.toString()
+                                        ),
+                                        "Startuper"
+                                    )
+                                    userViewModel.addNewUser(firebaseUser.uid, user)
+                                }
+                            }
+                        }
+                    }
+                    userViewModel.apply {
+                        getUserByUID(firebaseUser.uid)
+                        userModel.observe(viewLifecycleOwner) { user ->
+                            updateUi(user)
+                        }
+                    }
                 }
-                updateUi(firebaseUser)
             }
         }
 
@@ -68,7 +102,7 @@ class SignInFragment : Fragment() {
             .requestEmail()
             .build()
         // Build a GoogleSignInClient with the options specified by gso.
-        val mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+        mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
         // Check for existing Google Sign In account, if the user is already signed in
@@ -88,7 +122,6 @@ class SignInFragment : Fragment() {
                 isGoogleAuthRequired.value = true
                 val signInIntent = mGoogleSignInClient.signInIntent
                 activityResult.launch(signInIntent)
-                mGoogleSignInClient.signOut()
             }
         }
     }
@@ -116,10 +149,12 @@ class SignInFragment : Fragment() {
             }
         }
 
-    private fun updateUi(user: FirebaseUser?) {
+    private fun updateUi(user: User?) {
+        mGoogleSignInClient.signOut()
         if (user != null) {
-            val mainActivity = Intent(context, MainActivity::class.java)
-            startActivity(mainActivity)
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra("user", user)
+            startActivity(intent)
             activity?.finish()
         } else {
             Log.e("AUTH", "User is null")

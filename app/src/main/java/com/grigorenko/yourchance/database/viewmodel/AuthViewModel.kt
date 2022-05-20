@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.grigorenko.yourchance.database.repo.FirebaseAuthRepo
 
-class AuthViewModel(): ViewModel() {
+class AuthViewModel: ViewModel() {
     private val firebaseAuthRepo = FirebaseAuthRepo()
 
     val firebaseUser: MutableLiveData<FirebaseUser> by lazy {

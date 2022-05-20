@@ -10,18 +10,10 @@ import com.grigorenko.yourchance.database.repo.FirestoreRepo
 class StartupViewModel: ViewModel() {
     private val firestoreRepo = FirestoreRepo()
 
-    val userStartups: MutableLiveData<List<Startup>> by lazy {
-        MutableLiveData<List<Startup>>()
-    }
-    val latestStartups: MutableLiveData<List<Startup>> by lazy {
-        MutableLiveData<List<Startup>>()
-    }
-    val popularStartups: MutableLiveData<List<Startup>> by lazy {
-        MutableLiveData<List<Startup>>()
-    }
-    val isStartupUpdated: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>()
-    }
+    val userStartups = MutableLiveData<List<Startup>>()
+    val latestStartups = MutableLiveData<List<Startup>>()
+    val popularStartups = MutableLiveData<List<Startup>>()
+    val isStartupUpdated = MutableLiveData<Boolean>()
 
     fun addNewStartupToFirestore(imgDrawable: Drawable, startup: Startup, userUID: String) {
         firestoreRepo.addNewStartupToFirestore(imgDrawable, startup, userUID)
@@ -31,8 +23,8 @@ class StartupViewModel: ViewModel() {
         firestoreRepo.manageUserStartups(userUID, userStartups)
     }
 
-    fun deleteUserStartup(userUID: String, startup: Startup) {
-        firestoreRepo.deleteUserStartup(userUID, startup)
+    fun deleteUserStartup(startupImage: Image) {
+        firestoreRepo.deleteUserStartup(startupImage)
     }
 
     fun updateUserStartup(imgDrawable: Drawable?, startup: Startup, oldImage: Image) {
@@ -46,6 +38,15 @@ class StartupViewModel: ViewModel() {
     fun getStartupsOrderedByDate() {
         firestoreRepo.getStartupsOrderedByDate(latestStartups)
     }
+
+    fun addStartupToFavorites(userUID: String, startupImage: Image) {
+        firestoreRepo.addStartupToFavorites(userUID, startupImage)
+    }
+
+    fun deleteStartupFromFavorites(userUID: String, startup: Startup) {
+        firestoreRepo.deleteStartupFromFavorites(userUID, startup)
+    }
+
     fun incrementStartupViews(image: Image) {
         firestoreRepo.incrementStartupViews(image)
     }

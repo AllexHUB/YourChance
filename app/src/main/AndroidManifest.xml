@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.YourChance">
         <activity
-            android:name="com.grigorenko.yourchance.auth.tablayout.activity.AuthenticationActivity"
+            android:name=".auth.tablayout.activity.AuthenticationActivity"
             android:exported="true"
             android:theme="@style/Theme.YourChance.NoActionBar"
             android:windowSoftInputMode="adjustPan">
@@ -23,12 +23,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.grigorenko.yourchance.ui.MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="false"
             android:theme="@style/Theme.YourChance.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.grigorenko.yourchance.ui.user_profile.UserProfileActivity"
+            android:name=".ui.startuper.user_profile.UserProfileActivity"
             android:exported="false"
             android:label="@string/title_activity_user_profile"
             android:theme="@style/Theme.YourChance.NoActionBar"

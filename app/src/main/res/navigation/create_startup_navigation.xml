@@ -6,16 +6,16 @@
 
     <fragment
         android:id="@+id/imagesFragment"
-        android:name="com.grigorenko.yourchance.ui.create_new_startup.detail_fragments.ImagesFragment"
+        android:name="com.grigorenko.yourchance.ui.startuper.create_new_startup.detail_fragments.ImagesFragment"
         android:label="Фотоописание стартапа" >
         <action
             android:id="@+id/action_imagesFragment_to_myStartupFragment"
-            app:destination="@+id/nav_my_startup"
+            app:destination="@+id/my_startups"
             app:popUpTo="@id/create_startup_navigation"/>
     </fragment>
     <fragment
         android:id="@+id/moneyInvestFragment"
-        android:name="com.grigorenko.yourchance.ui.create_new_startup.detail_fragments.MoneyInvestFragment"
+        android:name="com.grigorenko.yourchance.ui.startuper.create_new_startup.detail_fragments.MoneyInvestFragment"
         android:label="Необходимая сумма" >
         <action
             android:id="@+id/action_moneyInvestFragment_to_descriptionFragment"
@@ -23,7 +23,7 @@
     </fragment>
     <fragment
         android:id="@+id/categoryFragment"
-        android:name="com.grigorenko.yourchance.ui.create_new_startup.detail_fragments.category.CategoryFragment"
+        android:name="com.grigorenko.yourchance.ui.startuper.create_new_startup.detail_fragments.category.CategoryFragment"
         android:label="Категория стартапа" >
         <action
             android:id="@+id/action_categoryFragment_to_nameFragment"
@@ -31,7 +31,7 @@
     </fragment>
     <fragment
         android:id="@+id/nameFragment"
-        android:name="com.grigorenko.yourchance.ui.create_new_startup.detail_fragments.NameFragment"
+        android:name="com.grigorenko.yourchance.ui.startuper.create_new_startup.detail_fragments.NameFragment"
         android:label="Название стартапа" >
         <action
             android:id="@+id/action_nameFragment_to_moneyInvestFragment"
@@ -39,7 +39,7 @@
     </fragment>
     <fragment
         android:id="@+id/descriptionFragment"
-        android:name="com.grigorenko.yourchance.ui.create_new_startup.detail_fragments.DescriptionFragment"
+        android:name="com.grigorenko.yourchance.ui.startuper.create_new_startup.detail_fragments.DescriptionFragment"
         android:label="Описание стартапа" >
         <action
             android:id="@+id/action_descriptionFragment_to_locationFragment"
@@ -47,7 +47,7 @@
     </fragment>
     <fragment
         android:id="@+id/locationFragment"
-        android:name="com.grigorenko.yourchance.ui.create_new_startup.detail_fragments.LocationFragment"
+        android:name="com.grigorenko.yourchance.ui.startuper.create_new_startup.detail_fragments.LocationFragment"
         android:label="Расположение" >
         <action
             android:id="@+id/action_locationFragment_to_imagesFragment"
