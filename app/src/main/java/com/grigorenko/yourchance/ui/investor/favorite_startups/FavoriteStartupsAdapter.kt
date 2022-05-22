@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.grigorenko.yourchance.R
-import com.grigorenko.yourchance.database.model.Startup
-import com.grigorenko.yourchance.databinding.StartupItemBinding
+import com.grigorenko.yourchance.databinding.FavStartupItemBinding
+import com.grigorenko.yourchance.domain.model.Startup
 import com.squareup.picasso.Picasso
 
 class FavoriteStartupsAdapter(
@@ -28,7 +28,7 @@ class FavoriteStartupsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteStartupsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = StartupItemBinding.inflate(inflater, parent, false)
+        val binding = FavStartupItemBinding.inflate(inflater, parent, false)
         return FavoriteStartupsViewHolder(binding, startupClickListener)
     }
 
@@ -45,14 +45,15 @@ class FavoriteStartupsAdapter(
 }
 
 class FavoriteStartupsViewHolder(
-    private val startupItemBinding: StartupItemBinding,
+    private val startupItemBinding: FavStartupItemBinding,
     private val startupClickListener: StartupClickListener
 ) : RecyclerView.ViewHolder(startupItemBinding.root) {
 
     fun bindStartup(startup: Startup) {
         Picasso.get()
             .load(startup.image.uri.toUri())
-            .fit()
+            .fit().centerCrop()
+            .placeholder(R.drawable.ic_loading_image)
             .into(startupItemBinding.image)
         startupItemBinding.apply {
             name.text = startup.name

@@ -1,4 +1,4 @@
-package com.grigorenko.yourchance.database.model
+package com.grigorenko.yourchance.domain.model
 
 data class ChatPresentation(
     val companion: User,

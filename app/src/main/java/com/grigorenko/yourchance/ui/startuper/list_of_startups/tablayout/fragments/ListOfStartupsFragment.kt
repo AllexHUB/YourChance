@@ -29,6 +29,7 @@ class ListOfStartupsFragment : Fragment() {
         val viewPagerAdapter = ViewPagerAdapter(childFragmentManager, lifecycle)
 
         viewPager.adapter = viewPagerAdapter
+        viewPager.isUserInputEnabled = false
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
                 0 -> tab.text = "Популярные"

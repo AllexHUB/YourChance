@@ -9,9 +9,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.grigorenko.yourchance.database.model.Message
-import com.grigorenko.yourchance.database.viewmodel.ChatViewModel
 import com.grigorenko.yourchance.databinding.FragmentChatBinding
+import com.grigorenko.yourchance.domain.model.Message
+import com.grigorenko.yourchance.domain.viewmodel.ChatViewModel
 import com.grigorenko.yourchance.ui.MainActivity
 import com.grigorenko.yourchance.ui.startuper.messages.adapters.ChatAdapter
 import java.util.*

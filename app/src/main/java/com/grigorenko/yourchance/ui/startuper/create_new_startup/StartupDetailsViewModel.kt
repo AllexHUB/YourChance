@@ -1,10 +1,10 @@
 package com.grigorenko.yourchance.ui.startuper.create_new_startup
 
 import androidx.lifecycle.ViewModel
-import com.grigorenko.yourchance.database.model.Image
-import com.grigorenko.yourchance.database.model.Location
-import com.grigorenko.yourchance.database.model.MoneyInvest
-import com.grigorenko.yourchance.database.model.Startup
+import com.grigorenko.yourchance.domain.model.Image
+import com.grigorenko.yourchance.domain.model.Location
+import com.grigorenko.yourchance.domain.model.MoneyInvest
+import com.grigorenko.yourchance.domain.model.Startup
 import java.util.*
 
 class StartupDetailsViewModel : ViewModel() {

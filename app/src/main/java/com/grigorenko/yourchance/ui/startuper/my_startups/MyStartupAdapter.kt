@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.grigorenko.yourchance.R
-import com.grigorenko.yourchance.database.model.Startup
+import com.grigorenko.yourchance.domain.model.Startup
 import com.grigorenko.yourchance.databinding.MyStartupItemBinding
 import com.squareup.picasso.Picasso
 
@@ -53,7 +53,8 @@ class MyStartupViewHolder(
     fun bindStartup(startup: Startup) {
         Picasso.get()
             .load(startup.image.uri.toUri())
-            .fit()
+            .fit().centerCrop()
+            .placeholder(R.drawable.ic_loading_image)
             .into(myStartupItemBinding.image)
         myStartupItemBinding.apply {
             name.text = startup.name

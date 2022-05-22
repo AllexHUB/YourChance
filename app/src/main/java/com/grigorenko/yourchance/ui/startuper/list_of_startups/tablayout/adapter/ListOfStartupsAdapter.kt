@@ -1,31 +1,29 @@
 package com.grigorenko.yourchance.ui.startuper.list_of_startups.tablayout.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.net.toUri
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.grigorenko.yourchance.R
-import com.grigorenko.yourchance.database.model.Startup
 import com.grigorenko.yourchance.databinding.StartupItemBinding
+import com.grigorenko.yourchance.domain.model.Startup
 import com.grigorenko.yourchance.ui.startuper.list_of_startups.interfaces.StartupClickListener
 import com.squareup.picasso.Picasso
 
 class ListOfStartupsAdapter(
     private val startupClickListener: StartupClickListener,
     private val favoriteStartups: List<Startup>?,
-    private val owner: LifecycleOwner
+    private val userUID: String,
+    private val userType: String
 ) : ListAdapter<Startup, ListOfStartupsViewHolder>(StartupDiff) {
     companion object {
         private object StartupDiff : DiffUtil.ItemCallback<Startup>() {
             override fun areItemsTheSame(oldItem: Startup, newItem: Startup): Boolean {
                 return oldItem.image == newItem.image
             }
-
             override fun areContentsTheSame(oldItem: Startup, newItem: Startup): Boolean {
                 return oldItem == newItem
             }
@@ -40,7 +38,7 @@ class ListOfStartupsAdapter(
 
     override fun onBindViewHolder(holder: ListOfStartupsViewHolder, position: Int) {
         val startup = getItem(position)
-        holder.bindStartup(startup, favoriteStartups, owner)
+        holder.bindStartup(startup, favoriteStartups, userUID, userType)
     }
 
     override fun submitList(list: List<Startup>?) {
@@ -54,20 +52,16 @@ class ListOfStartupsViewHolder(
     private val startupItemBinding: StartupItemBinding,
     private val startupClickListener: StartupClickListener
 ) : RecyclerView.ViewHolder(startupItemBinding.root) {
-
-    private var isFavoriteStartup: Boolean = false
-
-    fun bindStartup(startup: Startup, favoriteStartups: List<Startup>?, owner: LifecycleOwner) {
-        val newImage = MutableLiveData(startupItemBinding.image)
+    fun bindStartup(startup: Startup, favoriteStartups: List<Startup>?, userUID: String, userType: String) {
+        var isFavoriteStartup = false
+        var isOwnStartup = false
+        var isUserStartuper = false
         Picasso.get()
             .load(startup.image.uri.toUri())
-            .fit()
+            .fit().centerCrop()
+            .placeholder(R.drawable.ic_loading_image)
             .into(startupItemBinding.image)
         startupItemBinding.apply {
-            newImage.observe(owner) {
-                progressBar.visibility = View.GONE
-                image.visibility = View.VISIBLE
-            }
             name.text = startup.name
             description.text = startup.description
             category.text = startup.category
@@ -79,20 +73,22 @@ class ListOfStartupsViewHolder(
             progressBarMoneyInvest.max = startup.moneyInvest.wholeSum.toInt()
             progressBarMoneyInvest.progress = startup.moneyInvest.collectedSum.toInt()
             amountOfViews.text = startup.views.toString()
-//            if (!favoriteStartups.isNullOrEmpty())
-//                for (i in favoriteStartups.iterator())
-//                    if (i.image == startup.image) {
-//                        iconFavorite.setImageResource(R.drawable.ic_remove_from_favorites_black)
-//                        isFavoriteStartup = true
-//                        break
-//                    }
-            if (!favoriteStartups.isNullOrEmpty())
-                if (favoriteStartups.contains(startup)) {
+            if (userType == "Investor") {
+                startupCardView.setCardBackgroundColor(Color.WHITE)
+                if (favoriteStartups?.contains(startup) == true) {
                     iconFavorite.setImageResource(R.drawable.ic_remove_from_favorites_black)
                     isFavoriteStartup = true
-                }
+                } else
+                    iconFavorite.setImageResource(R.drawable.ic_add_to_favorites_black)
+            } else {
+                isUserStartuper = true
+                if (userUID == startup.ownerId) {
+                    isOwnStartup = true
+                } else
+                    startupCardView.setCardBackgroundColor(Color.WHITE)
+            }
             startupCardView.setOnClickListener {
-                startupClickListener.onClick(startup, isFavoriteStartup)
+                startupClickListener.onClick(startup, isFavoriteStartup, isOwnStartup, isUserStartuper)
             }
         }
     }

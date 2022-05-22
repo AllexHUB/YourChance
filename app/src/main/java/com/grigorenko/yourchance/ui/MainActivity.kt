@@ -16,10 +16,10 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.grigorenko.yourchance.R
-import com.grigorenko.yourchance.database.model.User
-import com.grigorenko.yourchance.database.viewmodel.StartupViewModel
-import com.grigorenko.yourchance.database.viewmodel.UserViewModel
 import com.grigorenko.yourchance.databinding.ActivityMainBinding
+import com.grigorenko.yourchance.domain.model.User
+import com.grigorenko.yourchance.domain.viewmodel.StartupViewModel
+import com.grigorenko.yourchance.domain.viewmodel.UserViewModel
 import com.grigorenko.yourchance.ui.startuper.list_of_startups.interfaces.NavigationDrawerDisabler
 import com.grigorenko.yourchance.ui.startuper.user_profile.UserProfileActivity
 import com.squareup.picasso.Picasso

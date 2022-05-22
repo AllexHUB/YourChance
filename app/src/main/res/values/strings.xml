@@ -75,5 +75,8 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="menu_favorite_startups">Избранные стартапы</string>
-    <string name="type_a_message">Написать сообщение...</string>
+    <string name="type_a_message">Написать сообщение…</string>
+    <string name="text_greeting">Добро пожаловать</string>
+    <string name="text_log_in">Авторизируйтесь, чтобы продолжить</string>
+    <string name="text_creation_new_account">Создание учетной записи</string>
 </resources>

@@ -9,9 +9,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.grigorenko.yourchance.R
-import com.grigorenko.yourchance.database.viewmodel.StartupViewModel
-import com.grigorenko.yourchance.database.viewmodel.UserViewModel
 import com.grigorenko.yourchance.databinding.FragmentSelectedStartupBinding
+import com.grigorenko.yourchance.domain.viewmodel.StartupViewModel
+import com.grigorenko.yourchance.domain.viewmodel.UserViewModel
 import com.grigorenko.yourchance.ui.MainActivity
 import com.squareup.picasso.Picasso
 
@@ -58,6 +58,8 @@ class SelectedStartupFragment : Fragment() {
             progressBarMoneyInvest.max = args.startup.moneyInvest.wholeSum.toInt()
             progressBarMoneyInvest.progress = args.startup.moneyInvest.collectedSum.toInt()
             isFavoriteStartup = args.isFavoriteStartup
+            if (args.isOwnStartup)
+                buttonWriteToAuthor.visibility = View.GONE
             buttonWriteToAuthor.setOnClickListener {
                 userViewModel.apply {
                     userModel.value = null
@@ -93,10 +95,12 @@ class SelectedStartupFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.curr_startup_menu, menu)
-        if (isFavoriteStartup)
-            menu.findItem(R.id.set_as_favorite).icon =
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_remove_from_favorites)
+        if (!args.isUserStartuper) {
+            menuInflater.inflate(R.menu.curr_startup_menu, menu)
+            if (isFavoriteStartup)
+                menu.findItem(R.id.set_as_favorite).icon =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_remove_from_favorites)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

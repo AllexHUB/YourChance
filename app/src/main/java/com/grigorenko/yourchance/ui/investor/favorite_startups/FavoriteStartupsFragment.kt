@@ -8,17 +8,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.grigorenko.yourchance.database.model.Startup
-import com.grigorenko.yourchance.database.viewmodel.StartupViewModel
-import com.grigorenko.yourchance.database.viewmodel.UserViewModel
 import com.grigorenko.yourchance.databinding.FragmentFavoriteStartupsBinding
+import com.grigorenko.yourchance.domain.model.Startup
+import com.grigorenko.yourchance.domain.viewmodel.StartupViewModel
 
 class FavoriteStartupsFragment : Fragment(), StartupClickListener {
     private var _binding: FragmentFavoriteStartupsBinding? = null
     private val binding get() = _binding!!
 
     private val startupViewModel: StartupViewModel by activityViewModels()
-    private val userViewModel: UserViewModel by activityViewModels()
 
     private val adapter = FavoriteStartupsAdapter(this)
 
@@ -32,9 +30,7 @@ class FavoriteStartupsFragment : Fragment(), StartupClickListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        //val userUID = userViewModel.getCurrentUserUID()
         startupViewModel.apply {
-            //manageUserStartups(userUID)
             userStartups.observe(viewLifecycleOwner) {
                 adapter.submitList(it)
             }
@@ -49,6 +45,13 @@ class FavoriteStartupsFragment : Fragment(), StartupClickListener {
     }
 
     override fun onClick(startup: Startup, isFavoriteStartup: Boolean) {
-        findNavController().navigate(FavoriteStartupsFragmentDirections.actionFavoriteStartupsToSelectedStartup(startup, isFavoriteStartup))
+        findNavController().navigate(
+            FavoriteStartupsFragmentDirections.actionFavoriteStartupsToSelectedStartup(
+                startup,
+                isFavoriteStartup,
+                false,
+                false
+            )
+        )
     }
 }

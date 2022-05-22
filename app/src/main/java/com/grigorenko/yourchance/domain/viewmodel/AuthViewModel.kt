@@ -1,9 +1,9 @@
-package com.grigorenko.yourchance.database.viewmodel
+package com.grigorenko.yourchance.domain.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
-import com.grigorenko.yourchance.database.repo.FirebaseAuthRepo
+import com.grigorenko.yourchance.domain.repo.FirebaseAuthRepo
 
 class AuthViewModel: ViewModel() {
     private val firebaseAuthRepo = FirebaseAuthRepo()

@@ -6,15 +6,53 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".auth.tablayout.fragments.SignInFragment">
 
+    <View
+        android:id="@+id/background_top"
+        android:layout_width="0dp"
+        android:layout_height="90dp"
+        android:background="@drawable/background_content_top"
+        android:backgroundTint="?attr/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/greeting_field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/text_greeting"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:maxLines="1"
+        android:gravity="center"
+        android:background="@drawable/background_chat_input"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/background_top"
+        app:layout_constraintStart_toStartOf="@id/email_container"
+        app:layout_constraintEnd_toEndOf="@id/email_container"/>
+
+    <TextView
+        android:id="@+id/log_in_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/text_log_in"
+        android:textSize="15sp"
+        android:maxLines="1"
+        app:layout_constraintTop_toBottomOf="@id/background_top"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/email_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="250dp"
+        android:layout_marginTop="150dp"
         android:layout_marginHorizontal="40dp"
-        android:visibility="gone"
         app:helperTextTextColor="@android:color/holo_red_dark"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/log_in_field"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -37,7 +75,6 @@
         android:layout_marginHorizontal="40dp"
         app:counterEnabled="true"
         app:counterMaxLength="16"
-        android:visibility="gone"
         app:passwordToggleEnabled="true"
         app:layout_constraintTop_toBottomOf="@id/email_container"
         app:layout_constraintStart_toStartOf="@id/email_container"
@@ -54,39 +91,51 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/sign_in_button"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:visibility="gone"
+        android:layout_marginHorizontal="40dp"
+        android:textStyle="bold"
+        android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@id/password_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="@string/sign_in"/>
 
-    <TextView
-        android:id="@+id/forget_password_field"
-        android:layout_width="wrap_content"
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/google_sign_in_button"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/text_forget_password"
-        android:textSize="16sp"
-        android:textColor="@color/blue_500"
-        android:textColorHighlight="@color/green_200"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/sign_in_button"
         app:layout_constraintStart_toStartOf="@id/sign_in_button"
         app:layout_constraintEnd_toEndOf="@id/sign_in_button"/>
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/google_sign_in_button"
+    <TextView
+        android:id="@+id/forget_password_field"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/sign_in_button"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="@string/text_forget_password"
+        android:textSize="16sp"
+        android:textColor="@color/blue_700"
+        android:textColorHighlight="@color/green_200"
+        app:layout_constraintTop_toBottomOf="@id/google_sign_in_button"
+        app:layout_constraintStart_toStartOf="@id/sign_in_button"
+        app:layout_constraintEnd_toEndOf="@id/sign_in_button"/>
+
+    <TextView
+        android:id="@+id/sign_up_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_up"
+        android:textSize="20sp"
+        android:textColor="#263238"
+        app:layout_constraintTop_toBottomOf="@id/forget_password_field"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintStart_toStartOf="@id/sign_in_button"
+        app:layout_constraintEnd_toEndOf="@id/sign_in_button"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

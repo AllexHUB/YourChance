@@ -8,9 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.grigorenko.yourchance.database.model.Startup
-import com.grigorenko.yourchance.database.viewmodel.StartupViewModel
 import com.grigorenko.yourchance.databinding.FragmentPopularStartupsBinding
+import com.grigorenko.yourchance.domain.model.Startup
+import com.grigorenko.yourchance.domain.model.User
+import com.grigorenko.yourchance.domain.viewmodel.StartupViewModel
+import com.grigorenko.yourchance.domain.viewmodel.UserViewModel
 import com.grigorenko.yourchance.ui.startuper.list_of_startups.interfaces.StartupClickListener
 import com.grigorenko.yourchance.ui.startuper.list_of_startups.tablayout.adapter.ListOfStartupsAdapter
 
@@ -19,6 +21,7 @@ class PopularStartupsFragment : Fragment(), StartupClickListener {
     private val binding get() = _binding!!
 
     private val startupViewModel: StartupViewModel by activityViewModels()
+    private val userViewModel: UserViewModel by activityViewModels()
 
     private lateinit var adapter: ListOfStartupsAdapter
 
@@ -32,13 +35,15 @@ class PopularStartupsFragment : Fragment(), StartupClickListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val user = requireActivity().intent.getParcelableExtra<User>("user")!!
+        val userUID = userViewModel.getCurrentUserUID()
         startupViewModel.apply {
             getStartupsOrderedByStars()
             userStartups.observe(viewLifecycleOwner) { favStartups ->
                 adapter = if (favStartups != null)
-                    ListOfStartupsAdapter(this@PopularStartupsFragment, favStartups, viewLifecycleOwner)
+                    ListOfStartupsAdapter(this@PopularStartupsFragment, favStartups, userUID, user.type)
                 else
-                    ListOfStartupsAdapter(this@PopularStartupsFragment, null, viewLifecycleOwner)
+                    ListOfStartupsAdapter(this@PopularStartupsFragment, null, userUID, user.type)
                 binding.recyclerView.adapter = adapter
                 popularStartups.observe(viewLifecycleOwner) { allStartups ->
                     adapter.submitList(allStartups)
@@ -48,10 +53,10 @@ class PopularStartupsFragment : Fragment(), StartupClickListener {
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
-    override fun onClick(startup: Startup, isFavoriteStartup: Boolean) {
+    override fun onClick(startup: Startup, isFavoriteStartup: Boolean, isOwnStartup: Boolean, isUserStartuper: Boolean) {
         findNavController().navigate(
             ListOfStartupsFragmentDirections.actionListOfStartupsToSelectedStartup(
-                startup, isFavoriteStartup
+                startup, isFavoriteStartup, isOwnStartup, isUserStartuper
             )
         )
     }

@@ -6,8 +6,8 @@ import androidx.core.net.toUri
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.grigorenko.yourchance.database.model.Image
-import com.grigorenko.yourchance.database.model.Message
+import com.grigorenko.yourchance.domain.model.Image
+import com.grigorenko.yourchance.domain.model.Message
 import com.grigorenko.yourchance.databinding.ReceivedMessageItemBinding
 import com.grigorenko.yourchance.databinding.SentMessageItemBinding
 import com.squareup.picasso.Picasso

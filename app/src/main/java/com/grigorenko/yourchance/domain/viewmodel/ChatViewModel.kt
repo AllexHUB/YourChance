@@ -1,10 +1,10 @@
-package com.grigorenko.yourchance.database.viewmodel
+package com.grigorenko.yourchance.domain.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.grigorenko.yourchance.database.model.ChatPresentation
-import com.grigorenko.yourchance.database.model.Message
-import com.grigorenko.yourchance.database.repo.FirestoreRepo
+import com.grigorenko.yourchance.domain.model.ChatPresentation
+import com.grigorenko.yourchance.domain.model.Message
+import com.grigorenko.yourchance.domain.repo.FirestoreRepo
 
 class ChatViewModel : ViewModel() {
     private val firestoreRepo = FirestoreRepo()

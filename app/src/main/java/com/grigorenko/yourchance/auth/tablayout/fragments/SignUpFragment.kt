@@ -10,11 +10,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.grigorenko.yourchance.R
-import com.grigorenko.yourchance.database.model.Image
-import com.grigorenko.yourchance.database.model.User
-import com.grigorenko.yourchance.database.viewmodel.AuthViewModel
-import com.grigorenko.yourchance.database.viewmodel.UserViewModel
 import com.grigorenko.yourchance.databinding.FragmentSignUpBinding
+import com.grigorenko.yourchance.domain.model.Image
+import com.grigorenko.yourchance.domain.model.User
+import com.grigorenko.yourchance.domain.viewmodel.AuthViewModel
+import com.grigorenko.yourchance.domain.viewmodel.UserViewModel
 import com.grigorenko.yourchance.ui.MainActivity
 import java.util.regex.Pattern
 
@@ -121,7 +121,7 @@ class SignUpFragment : Fragment() {
                 false
             }
             else -> {
-                binding.emailContainer.error = null
+                binding.nameContainer.error = null
                 true
             }
         }

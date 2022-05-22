@@ -6,7 +6,8 @@ import androidx.core.net.toUri
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.grigorenko.yourchance.database.model.ChatPresentation
+import com.grigorenko.yourchance.R
+import com.grigorenko.yourchance.domain.model.ChatPresentation
 import com.grigorenko.yourchance.databinding.ChatItemBinding
 import com.grigorenko.yourchance.ui.startuper.messages.ChatClickListener
 import com.squareup.picasso.Picasso
@@ -63,6 +64,7 @@ class UserChatViewHolder(
             Picasso.get()
                 .load(chatPresentation.companion.icon.uri.toUri())
                 .fit().centerCrop()
+                .placeholder(R.drawable.ic_loading_image)
                 .into(companionIcon)
             textName.text = chatPresentation.companion.fullName
             lastMessage.text = chatPresentation.lastMessage.text

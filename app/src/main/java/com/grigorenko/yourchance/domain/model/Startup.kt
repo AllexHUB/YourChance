@@ -1,4 +1,4 @@
-package com.grigorenko.yourchance.database.model
+package com.grigorenko.yourchance.domain.model
 
 import android.os.Parcel
 import android.os.Parcelable

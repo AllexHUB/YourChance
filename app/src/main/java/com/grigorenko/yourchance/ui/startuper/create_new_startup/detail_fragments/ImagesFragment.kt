@@ -13,12 +13,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.Timestamp
 import com.grigorenko.yourchance.databinding.FragmentImagesBinding
-import com.grigorenko.yourchance.database.model.Image
+import com.grigorenko.yourchance.domain.model.Image
 import com.grigorenko.yourchance.ui.startuper.create_new_startup.StartupDetailsViewModel
-import com.grigorenko.yourchance.database.viewmodel.StartupViewModel
-import com.grigorenko.yourchance.database.viewmodel.UserViewModel
+import com.grigorenko.yourchance.domain.viewmodel.StartupViewModel
+import com.grigorenko.yourchance.domain.viewmodel.UserViewModel
 import com.grigorenko.yourchance.ui.MainActivity
 import com.squareup.picasso.Picasso
 import java.util.*

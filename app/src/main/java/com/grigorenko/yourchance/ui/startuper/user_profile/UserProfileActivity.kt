@@ -6,9 +6,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.grigorenko.yourchance.auth.tablayout.activity.AuthenticationActivity
-import com.grigorenko.yourchance.database.model.Image
-import com.grigorenko.yourchance.database.viewmodel.AuthViewModel
-import com.grigorenko.yourchance.database.viewmodel.UserViewModel
+import com.grigorenko.yourchance.domain.model.Image
+import com.grigorenko.yourchance.domain.viewmodel.AuthViewModel
+import com.grigorenko.yourchance.domain.viewmodel.UserViewModel
 import com.grigorenko.yourchance.databinding.ActivityUserProfileBinding
 import com.squareup.picasso.Picasso
 

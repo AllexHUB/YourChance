@@ -8,10 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.grigorenko.yourchance.database.model.Image
-import com.grigorenko.yourchance.database.model.Startup
-import com.grigorenko.yourchance.database.viewmodel.StartupViewModel
-import com.grigorenko.yourchance.database.viewmodel.UserViewModel
+import com.grigorenko.yourchance.domain.model.Image
+import com.grigorenko.yourchance.domain.model.Startup
+import com.grigorenko.yourchance.domain.viewmodel.StartupViewModel
+import com.grigorenko.yourchance.domain.viewmodel.UserViewModel
 import com.grigorenko.yourchance.databinding.FragmentMyStartupBinding
 import com.grigorenko.yourchance.ui.startuper.create_new_startup.StartupDetailsViewModel
 import com.grigorenko.yourchance.ui.startuper.my_startups.MyStartupAdapter

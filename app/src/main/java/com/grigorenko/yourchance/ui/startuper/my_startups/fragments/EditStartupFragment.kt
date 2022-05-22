@@ -17,12 +17,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.grigorenko.yourchance.R
-import com.grigorenko.yourchance.database.model.Image
-import com.grigorenko.yourchance.database.model.Location
-import com.grigorenko.yourchance.database.model.MoneyInvest
 import com.grigorenko.yourchance.databinding.FragmentEditStartupBinding
+import com.grigorenko.yourchance.domain.model.Image
+import com.grigorenko.yourchance.domain.model.Location
+import com.grigorenko.yourchance.domain.model.MoneyInvest
+import com.grigorenko.yourchance.domain.viewmodel.StartupViewModel
 import com.grigorenko.yourchance.ui.startuper.create_new_startup.StartupDetailsViewModel
-import com.grigorenko.yourchance.database.viewmodel.StartupViewModel
 import com.squareup.picasso.Picasso
 
 class EditStartupFragment : Fragment() {

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.grigorenko.yourchance.database.model.Location
+import com.grigorenko.yourchance.domain.model.Location
 import com.grigorenko.yourchance.databinding.FragmentLocationBinding
 import com.grigorenko.yourchance.ui.startuper.create_new_startup.StartupDetailsViewModel
 

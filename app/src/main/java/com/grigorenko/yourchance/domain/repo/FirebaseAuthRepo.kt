@@ -1,4 +1,4 @@
-package com.grigorenko.yourchance.database.repo
+package com.grigorenko.yourchance.domain.repo
 
 import android.content.ContentValues
 import android.util.Log

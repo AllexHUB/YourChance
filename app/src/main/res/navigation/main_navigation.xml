@@ -52,7 +52,7 @@
         android:label="Редактирование" >
         <argument
             android:name="startup"
-            app:argType="com.grigorenko.yourchance.database.model.Startup" />
+            app:argType="com.grigorenko.yourchance.domain.model.Startup" />
         <action
             android:id="@+id/action_edit_startup_to_my_startups"
             app:destination="@id/my_startups" />
@@ -65,9 +65,15 @@
         tools:layout="@layout/fragment_selected_startup">
         <argument
             android:name="startup"
-            app:argType="com.grigorenko.yourchance.database.model.Startup" />
+            app:argType="com.grigorenko.yourchance.domain.model.Startup" />
         <argument
             android:name="isFavoriteStartup"
+            app:argType="boolean" />
+        <argument
+            android:name="isOwnStartup"
+            app:argType="boolean" />
+        <argument
+            android:name="isUserStartuper"
             app:argType="boolean" />
         <action
             android:id="@+id/action_selected_startup_to_chatFragment"
@@ -96,7 +102,7 @@
             app:argType="string" />
         <argument
             android:name="companion"
-            app:argType="com.grigorenko.yourchance.database.model.User" />
+            app:argType="com.grigorenko.yourchance.domain.model.User" />
     </fragment>
 
 </navigation>

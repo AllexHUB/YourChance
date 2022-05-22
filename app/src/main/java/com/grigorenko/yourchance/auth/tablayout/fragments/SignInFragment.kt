@@ -10,16 +10,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.grigorenko.yourchance.auth.tablayout.activity.AuthenticationActivity
-import com.grigorenko.yourchance.database.model.Image
-import com.grigorenko.yourchance.database.model.User
-import com.grigorenko.yourchance.database.viewmodel.AuthViewModel
-import com.grigorenko.yourchance.database.viewmodel.UserViewModel
 import com.grigorenko.yourchance.databinding.FragmentSignInBinding
+import com.grigorenko.yourchance.domain.model.Image
+import com.grigorenko.yourchance.domain.model.User
+import com.grigorenko.yourchance.domain.viewmodel.AuthViewModel
+import com.grigorenko.yourchance.domain.viewmodel.UserViewModel
 import com.grigorenko.yourchance.ui.MainActivity
 
 class SignInFragment : Fragment() {
@@ -37,14 +37,9 @@ class SignInFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSignInBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        (activity as AuthenticationActivity).disableTabLayout()
 
         val signedUser = authViewModel.checkedForSignedUser()
+        Log.d("signedUser", signedUser.toString())
         if (signedUser != null)
             userViewModel.apply {
                 getUserByUID(signedUser.uid)
@@ -52,17 +47,21 @@ class SignInFragment : Fragment() {
                     updateUi(user)
                 }
             }
-        else {
-            (activity as AuthenticationActivity).enableTabLayout()
-            binding.apply {
-                emailContainer.visibility = View.VISIBLE
-                passwordContainer.visibility = View.VISIBLE
-                signInButton.visibility = View.VISIBLE
-                forgetPasswordField.visibility = View.VISIBLE
-                googleSignInButton.visibility = View.VISIBLE
-            }
-        }
+//        else {
+//            binding.apply {
+//                emailContainer.visibility = View.VISIBLE
+//                passwordContainer.visibility = View.VISIBLE
+//                signInButton.visibility = View.VISIBLE
+//                forgetPasswordField.visibility = View.VISIBLE
+//                googleSignInButton.visibility = View.VISIBLE
+//            }
+//        }
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         authViewModel.firebaseUser.observe(viewLifecycleOwner) { firebaseUser ->
             isGoogleAuthRequired.observe(viewLifecycleOwner) { isGoogleAuth ->
                 if (firebaseUser != null) {
@@ -122,6 +121,9 @@ class SignInFragment : Fragment() {
                 isGoogleAuthRequired.value = true
                 val signInIntent = mGoogleSignInClient.signInIntent
                 activityResult.launch(signInIntent)
+            }
+            signUpField.setOnClickListener {
+                findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToSignUpFragment())
             }
         }
     }

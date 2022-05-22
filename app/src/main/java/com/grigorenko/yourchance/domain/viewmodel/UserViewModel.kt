@@ -1,12 +1,12 @@
-package com.grigorenko.yourchance.database.viewmodel
+package com.grigorenko.yourchance.domain.viewmodel
 
 import android.graphics.drawable.Drawable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.grigorenko.yourchance.database.model.Image
-import com.grigorenko.yourchance.database.model.User
-import com.grigorenko.yourchance.database.repo.FirebaseAuthRepo
-import com.grigorenko.yourchance.database.repo.FirestoreRepo
+import com.grigorenko.yourchance.domain.model.Image
+import com.grigorenko.yourchance.domain.model.User
+import com.grigorenko.yourchance.domain.repo.FirebaseAuthRepo
+import com.grigorenko.yourchance.domain.repo.FirestoreRepo
 
 class UserViewModel : ViewModel() {
     private val firestoreRepo = FirestoreRepo()

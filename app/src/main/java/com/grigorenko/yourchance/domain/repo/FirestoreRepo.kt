@@ -1,4 +1,4 @@
-package com.grigorenko.yourchance.database.repo
+package com.grigorenko.yourchance.domain.repo
 
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -12,7 +12,7 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
-import com.grigorenko.yourchance.database.model.*
+import com.grigorenko.yourchance.domain.model.*
 import java.io.ByteArrayOutputStream
 
 class FirestoreRepo {

@@ -8,10 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.grigorenko.yourchance.database.model.User
-import com.grigorenko.yourchance.database.viewmodel.ChatViewModel
-import com.grigorenko.yourchance.database.viewmodel.UserViewModel
 import com.grigorenko.yourchance.databinding.FragmentUserChatsBinding
+import com.grigorenko.yourchance.domain.model.User
+import com.grigorenko.yourchance.domain.viewmodel.ChatViewModel
+import com.grigorenko.yourchance.domain.viewmodel.UserViewModel
 import com.grigorenko.yourchance.ui.startuper.messages.ChatClickListener
 import com.grigorenko.yourchance.ui.startuper.messages.adapters.UserChatsAdapter
 
